@@ -19,9 +19,9 @@ def HuiZhi():
     X=400
     Canvas1=Canvas(width=400,height=400)
     Canvas1.pack()
-    Canvas1.delete(ALL)
     while 1:
         Suo.acquire()
+        Canvas1.delete(ALL)
         for Hua in GuiJi:
             Canvas1.create_oval(X,Hua,X,Hua)
             X=X-1
