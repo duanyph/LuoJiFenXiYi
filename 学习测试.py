@@ -8,13 +8,14 @@ Suo=threading.RLock()
 def CaiYang():
     global ZhuangTai
     global GuiJi
-    global cly
+    # global cly
     while 1:
         GuiJi.pop()
         GuiJi.insert(0,ZhuangTai)
-        cly=1+cly
+        # cly=1+cly
 def HuiZhi():
     global GuiJi
+    global cly
     tk1=Tk()
     X=400
     Canvas1=Canvas(width=400,height=400)
@@ -27,6 +28,7 @@ def HuiZhi():
             X=X-1
         tk1.update()
         X=400
+        cly=1+cly
         Suo.release()
 threading.Thread(target=CaiYang,args=()).start()
 threading.Thread(target=HuiZhi,args=()).start()
