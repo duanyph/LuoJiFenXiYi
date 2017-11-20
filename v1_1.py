@@ -5,29 +5,69 @@ Created on 2017年11月15日
 @author: duany
 '''
 from tkinter import *
-import threading,time
-ZhuanTai=10
-BiaoShi=None
-GuiJi=[]
+import threading,time,sqlite3
+cyl=0
+ZhuanTai="0"
 X=1
-tk1=Tk()
+tk1 = Tk()
+tk1.geometry("400x400")
+ShuJvKu2=sqlite3.connect("GuiJi.db")
+YouBiao2=ShuJvKu2.cursor()
 def CaiYang():
-    global BiaoShi,ZhuanTai,GuiJi
-    while 1:
-        GuiJi.append(ZhuanTai)
-#         time.sleep(0.01)
-        if BiaoShi=="t":
-            break
+    global ZhuanTai,cyl
+    ShuJvKu=sqlite3.connect("GuiJi.db")
+    YouBiao=ShuJvKu.cursor()
+    try:
+        YouBiao.execute("drop table GuiJi")
+    except:
+        pass
+    YouBiao.execute("CREATE TABLE GuiJi (GuiJi INT)")
+    ShuJvKu.commit()
+    while ZhuanTai!="t":
+        YouBiao.execute("INSERT INTO GuiJi VALUES ("+ZhuanTai+")")
+        cyl=cyl+1
+    ShuJvKu.commit()
+    ShuJvKu.close()
+class AutoScrollbar(Scrollbar):
+    # a scrollbar that hides itself if it's not needed.  only
+    # works if you use the grid geometry manager.
+    def set(self, lo, hi):
+        if float(lo) <= 0.0 and float(hi) >= 1.0:
+            # grid_remove is currently missing from Tkinter!
+            self.tk.call("grid", "remove", self)
+        else:
+            self.grid()
+        Scrollbar.set(self, lo, hi)
+# create scrolled canvas
+vscrollbar = AutoScrollbar(tk1)
+vscrollbar.grid(row=0, column=1, sticky=N+S)
+hscrollbar = AutoScrollbar(tk1, orient=HORIZONTAL)
+hscrollbar.grid(row=1, column=0, sticky=E+W)
+canvas1 = Canvas(tk1,yscrollcommand=vscrollbar.set,xscrollcommand=hscrollbar.set,height=400,bg="red")
+canvas1.grid(row=0, column=0, sticky=N+S+E+W)
+vscrollbar.config(command=canvas1.yview)
+hscrollbar.config(command=canvas1.xview)
+# make the canvas expandable
+tk1.grid_rowconfigure(0, weight=1)
+tk1.grid_columnconfigure(0, weight=1)
+# create canvas contents
+frame1 = Frame(canvas1)
+# frame1.rowconfigure(1, weight=1)
+# frame1.columnconfigure(1, weight=1)
+canvas1.create_window(0, 0, anchor=NW)
 ZiXianCheng=threading.Thread(target=CaiYang, args=())
 ZiXianCheng.start()
-while 1:
-    BiaoShi=input("输入“t”停止采样：")
-    if BiaoShi=="t":
-        break
-Canvas1=Canvas(width=400,height=400)
-for Hua in GuiJi:
-    Hua=0-Hua+400
-    Canvas1.create_rectangle(X,Hua,X,Hua)
+time.sleep(1)
+print(cyl)
+while ZhuanTai!="t":
+    ZhuanTai=input("输入“t”停止采样：")
+YouBiao2.execute("SELECT GuiJi FROM GuiJi")
+GuiJi=YouBiao2.fetchall()
+for JiLu in GuiJi:
+    JiLu=0-JiLu[0]+400
+    canvas1.create_rectangle(X,JiLu,X,JiLu)
     X=X+1
-Canvas1.pack()
+frame1.update_idletasks()
+canvas1.config(scrollregion=canvas1.bbox("all"))
+ShuJvKu2.close()
 tk1.mainloop()
