@@ -1,18 +1,17 @@
 #coding:utf-8
 '''
-Created on 2017年11月15日
-
 @author: duany
 '''
 from tkinter import *
 import threading,time,sqlite3
 from RPi import GPIO 
 cyl=0
-ZhuanTai="0"
+ZhuanTai=""
 X=1
 tk1 = Tk()
-tk1.geometry("200x400")
+tk1.geometry("400x200")
 GPIO.setmode(GPIO.BOARD)
+GPIO.setup(7,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 ShuJvKu2=sqlite3.connect("GuiJi.db")
 YouBiao2=ShuJvKu2.cursor()
 def CaiYang():
@@ -26,7 +25,7 @@ def CaiYang():
     YouBiao.execute("CREATE TABLE GuiJi (GuiJi INT)")
     ShuJvKu.commit()
     while ZhuanTai!="t":
-        YouBiao.execute("INSERT INTO GuiJi VALUES ("+GPIO.input(7)+")")
+        YouBiao.execute("INSERT INTO GuiJi VALUES ("+str(GPIO.input(7))+")")
         cyl=cyl+1
     ShuJvKu.commit()
     ShuJvKu.close()
@@ -45,7 +44,7 @@ vscrollbar = AutoScrollbar(tk1)
 vscrollbar.grid(row=0, column=1, sticky=N+S)
 hscrollbar = AutoScrollbar(tk1, orient=HORIZONTAL)
 hscrollbar.grid(row=1, column=0, sticky=E+W)
-canvas1 = Canvas(tk1,yscrollcommand=vscrollbar.set,xscrollcommand=hscrollbar.set,height=200,bg="red")
+canvas1 = Canvas(tk1,yscrollcommand=vscrollbar.set,xscrollcommand=hscrollbar.set,height=200)
 canvas1.grid(row=0, column=0, sticky=N+S+E+W)
 vscrollbar.config(command=canvas1.yview)
 hscrollbar.config(command=canvas1.xview)
@@ -59,7 +58,7 @@ frame1 = Frame(canvas1)
 canvas1.create_window(0, 0, anchor=NW)
 ZiXianCheng=threading.Thread(target=CaiYang, args=())
 ZiXianCheng.start()
-time.sleep(1)
+time.sleep(3)
 print(cyl)
 while ZhuanTai!="t":
     ZhuanTai=input("输入“t”停止采样：")
