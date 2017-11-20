@@ -6,11 +6,13 @@ Created on 2017年11月15日
 '''
 from tkinter import *
 import threading,time,sqlite3
+from RPi import GPIO 
 cyl=0
 ZhuanTai="0"
 X=1
 tk1 = Tk()
-tk1.geometry("400x400")
+tk1.geometry("200x400")
+GPIO.setmode(GPIO.BOARD)
 ShuJvKu2=sqlite3.connect("GuiJi.db")
 YouBiao2=ShuJvKu2.cursor()
 def CaiYang():
@@ -24,7 +26,7 @@ def CaiYang():
     YouBiao.execute("CREATE TABLE GuiJi (GuiJi INT)")
     ShuJvKu.commit()
     while ZhuanTai!="t":
-        YouBiao.execute("INSERT INTO GuiJi VALUES ("+ZhuanTai+")")
+        YouBiao.execute("INSERT INTO GuiJi VALUES ("+GPIO.input(7)+")")
         cyl=cyl+1
     ShuJvKu.commit()
     ShuJvKu.close()
@@ -43,7 +45,7 @@ vscrollbar = AutoScrollbar(tk1)
 vscrollbar.grid(row=0, column=1, sticky=N+S)
 hscrollbar = AutoScrollbar(tk1, orient=HORIZONTAL)
 hscrollbar.grid(row=1, column=0, sticky=E+W)
-canvas1 = Canvas(tk1,yscrollcommand=vscrollbar.set,xscrollcommand=hscrollbar.set,height=400,bg="red")
+canvas1 = Canvas(tk1,yscrollcommand=vscrollbar.set,xscrollcommand=hscrollbar.set,height=200,bg="red")
 canvas1.grid(row=0, column=0, sticky=N+S+E+W)
 vscrollbar.config(command=canvas1.yview)
 hscrollbar.config(command=canvas1.xview)
@@ -64,7 +66,7 @@ while ZhuanTai!="t":
 YouBiao2.execute("SELECT GuiJi FROM GuiJi")
 GuiJi=YouBiao2.fetchall()
 for JiLu in GuiJi:
-    JiLu=0-JiLu[0]+400
+    JiLu=(0-JiLu[0])*100+150
     canvas1.create_rectangle(X,JiLu,X,JiLu)
     X=X+1
 frame1.update_idletasks()
