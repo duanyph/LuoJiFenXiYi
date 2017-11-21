@@ -9,13 +9,10 @@ from RPi import GPIO
 ZhuanTai=""
 X=1
 tk1 = Tk()
-<<<<<<< HEAD
 tk1.geometry("500x200")
 tk1.resizable(1, 0)
-=======
 tk1.geometry("400x200")
 tk1.resizable(1,0)
->>>>>>> db1921573c198cf3b55b41f93af3ab77c7f3f271
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(7,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 ShuJvKu2=sqlite3.connect("GuiJi.db")
