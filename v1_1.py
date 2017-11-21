@@ -10,6 +10,7 @@ ZhuanTai=""
 X=1
 tk1 = Tk()
 tk1.geometry("400x200")
+tk1.resizable(1,0)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(7,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 ShuJvKu2=sqlite3.connect("GuiJi.db")

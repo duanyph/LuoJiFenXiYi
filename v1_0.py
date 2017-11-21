@@ -7,11 +7,12 @@ Created on 2017年11月15日
 from tkinter import *
 import _thread,time
 ZhuangTai=0
-GuiJi=[0]*400
+GuiJi=[0]*500
 # cly=0
 tk1=Tk()
+tk1.resizable(0,0)
 X=1
-Canvas1=Canvas(width=400,height=400)
+Canvas1=Canvas(width=500,height=200)
 Canvas1.pack()
 # tk.geometry("800x800")
 def HuiZhi():
@@ -26,7 +27,7 @@ while 1:
     GuiJi.insert(0,ZhuangTai)
     Canvas1.delete(ALL)
     for Hua in GuiJi:
-        Hua=0-Hua+400
+        Hua=0-Hua+200
         Canvas1.create_rectangle(X,Hua,X,Hua)
         X=X+1
     tk1.update()
