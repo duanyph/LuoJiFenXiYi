@@ -1,38 +1,30 @@
 #coding:utf-8
 '''
+Created on 2017.11.15
+
 @author: duany
 '''
 from tkinter import *
-import threading,time,sqlite3
+import threading,time,csv
 from RPi import GPIO 
-#~ cyl=0
+cyl=0
 ZhuanTai=""
 X=1
 tk1 = Tk()
 tk1.geometry("500x200")
 tk1.resizable(1, 0)
-tk1.geometry("400x200")
-tk1.resizable(1,0)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(7,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-ShuJvKu2=sqlite3.connect("GuiJi.db")
-YouBiao2=ShuJvKu2.cursor()
+LiShi=open("LiShi.csv","w")
+csv1=csv.writer(LiShi)
 def CaiYang():
-    global ZhuanTai
-    #~ global cyl
-    ShuJvKu=sqlite3.connect("GuiJi.db")
-    YouBiao=ShuJvKu.cursor()
-    try:
-        YouBiao.execute("drop table GuiJi")
-    except:
-        pass
-    YouBiao.execute("CREATE TABLE GuiJi (GuiJi INT)")
-    ShuJvKu.commit()
+    global ZhuanTai,LiShi
+    global cyl
     while ZhuanTai!="t":
-        YouBiao.execute("INSERT INTO GuiJi VALUES ("+str(GPIO.input(7))+")")
-        #~ cyl=cyl+1
-    ShuJvKu.commit()
-    ShuJvKu.close()
+        csv1.writerow([GPIO.input(7)])
+        cyl=cyl+1
+    LiShi.flush()
+    LiShi.close()
 class AutoScrollbar(Scrollbar):
     # a scrollbar that hides itself if it's not needed.  only
     # works if you use the grid geometry manager.
@@ -62,17 +54,14 @@ frame1 = Frame(canvas1)
 canvas1.create_window(0, 0, anchor=NW)
 ZiXianCheng=threading.Thread(target=CaiYang, args=())
 ZiXianCheng.start()
-#~ time.sleep(3)
-#~ print(cyl)
+time.sleep(1)
+print(cyl)
 while ZhuanTai!="t":
-    ZhuanTai=input("输入“t”停止采样")
-YouBiao2.execute("SELECT GuiJi FROM GuiJi")
-GuiJi=YouBiao2.fetchall()
-for JiLu in GuiJi:
-    JiLu=(0-JiLu[0])*100+150
+    ZhuanTai=input("输入“t”停止采样：")
+for JiLu in open("LiShi.csv","r"):
+    JiLu=(0-int(JiLu))*100+150
     canvas1.create_rectangle(X,JiLu,X,JiLu)
     X=X+1
 frame1.update_idletasks()
 canvas1.config(scrollregion=canvas1.bbox("all"))
-ShuJvKu2.close()
 tk1.mainloop()
