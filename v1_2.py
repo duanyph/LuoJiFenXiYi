@@ -59,8 +59,8 @@ time.sleep(1)
 print(cyl)
 while ZhuanTai!="t":
     ZhuanTai=input("输入“t”停止采样：")
-for JiLu in open("LiShi.csv","r"):
-    JiLu=(0-int(JiLu))*100+150
+for JiLu in csv.reader(open("LiShi.csv","r")):
+    JiLu=(0-int(JiLu[0]))*100+150
     canvas1.create_rectangle(X,JiLu,X,JiLu)
     X=X+1
 frame1.update_idletasks()
