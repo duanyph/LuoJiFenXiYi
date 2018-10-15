@@ -66,7 +66,7 @@ for JiLu in csv.reader(open("LiShi.csv","r")):
     if X%50000==0:
         canvas1.create_rectangle(X,155,X,165)
         if(ShiJian!=0.0):
-            canvas1.create_text(X,170,text =str(round(float(JiLu[1])-ShiJian,5)))
+            canvas1.create_text(X,170,text=str(round(float(JiLu[1])-ShiJian,5)))
         ShiJian=float(JiLu[1])
     X=X+1
 frame1.update_idletasks()
