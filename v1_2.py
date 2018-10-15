@@ -59,9 +59,15 @@ time.sleep(1)
 print(cyl)
 while ZhuanTai!="t":
     ZhuanTai=input("输入“t”停止采样：")
+ShiJian=0.0
 for JiLu in csv.reader(open("LiShi.csv","r")):
     JiLu=(0-int(JiLu[0]))*100+150
     canvas1.create_rectangle(X,JiLu,X,JiLu)
+    if X%50000==0:
+        canvas1.create_rectangle(X,155,X,165)
+        if(ShiJian!=0.0):
+            canvas1.create_text(X,170,text =str(round(float(JiLu[1])-ShiJian,5)))
+        ShiJian=float(JiLu[1])
     X=X+1
 frame1.update_idletasks()
 canvas1.config(scrollregion=canvas1.bbox("all"))
